@@ -1,25 +1,40 @@
-import apiKey from './apikey';
-import {getWeatherItems} from './model'
+import apiKey from "./apikey";
+import { OpenWeather } from "./open_weather";
 
-const populateUI = (zip) =>
-  getWeatherItems({zip, apiKey})
-  .map(weathers => weathers.map(toLi))
+const Weather = (dt, temp) => ({
+  dt,
+  temp
+});
 
-const toLi = weather =>
-  `<li>${weather.dt} ${weather.temp}</li>`
+const toFarenheit = k => k + 1000;
 
-///=============================
+const toWeather = (dt, temp) =>
+  Weather(new Date(dt).toLocaleDateString(), toFarenheit(temp));
+
+const prepareItems = w => toWeather(w.dt, w.main.temp);
+
+const getWeatherItems = zip =>
+  OpenWeather.fetch({ zip, apiKey })
+    .map(json => json.list.map(prepareItems))
+    .map(weather => weather.map(toLi));
+
+const toLi = weather => `<li>${weather.dt} ${weather.temp}</li> `;
+
+/// ===================================================
+
 const app = () => {
-  const goButton = document.getElementById('go')
-  const input = document.getElementById('zip')
-  const results = document.getElementById('results')
+  const goButton = document.getElementById("go");
+  const input = document.getElementById("zip");
+  const results = document.getElementById("results");
 
-  goButton.addEventListener('click', () => {
-    const zip = input.value.trim()
-    populateUI(zip).fork(console.error, html => {
-      results.innerHTML = html
-    })
-  })
-}
+  goButton.addEventListener("click", () => {
+    const zip = input.value.trim();
+    getWeatherItems(zip).fork(console.error, html => {
+      results.innerHTML = html;
+    });
+  });
+};
 
-app()
+app();
+
+///==================================================

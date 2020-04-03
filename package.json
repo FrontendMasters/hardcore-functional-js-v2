@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "immutable": "^4.0.0-rc.12",
+    "immutable-ext": "^1.1.5",
     "ramda": "^0.26.1"
   }
 }

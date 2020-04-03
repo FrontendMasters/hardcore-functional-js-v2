@@ -1,5 +1,6 @@
 const fs = require('fs')
-const Task = require('data.task')
+const {task, Either, Id} = require('types')
+const {Right, Left, fromNullable} = Either 
 const { List, Map } = require('immutable-ext')
 
 const httpGet = (path, params) =>
